@@ -5,6 +5,12 @@ import api from '../services/api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import Modal from '../components/Modal';
 import { showToast } from '../store/toastSlice';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Send, 
+  AlertTriangle 
+} from 'lucide-react';
 
 export default function QuizTakingPage() {
   const { sessionId, attemptId } = useParams();
@@ -165,16 +171,16 @@ export default function QuizTakingPage() {
               )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '24px' }}>
-                <button className="btn btn-secondary" disabled={currentQ === 0} onClick={() => setCurrentQ(currentQ - 1)}>
-                  ← Previous
+                <button className="btn btn-secondary" style={{ gap: '6px' }} disabled={currentQ === 0} onClick={() => setCurrentQ(currentQ - 1)}>
+                  <ChevronLeft size={16} /> Previous
                 </button>
                 {currentQ < questions.length - 1 ? (
-                  <button className="btn btn-primary" onClick={() => setCurrentQ(currentQ + 1)}>
-                    Next →
+                  <button className="btn btn-primary" style={{ gap: '6px' }} onClick={() => setCurrentQ(currentQ + 1)}>
+                    Next <ChevronRight size={16} />
                   </button>
                 ) : (
-                  <button className="btn btn-primary" onClick={() => setShowConfirm(true)}>
-                    📤 Submit Quiz
+                  <button className="btn btn-primary" style={{ gap: '6px' }} onClick={() => setShowConfirm(true)}>
+                    <Send size={16} /> Submit Quiz
                   </button>
                 )}
               </div>
@@ -207,10 +213,10 @@ export default function QuizTakingPage() {
 
           <button
             className="btn btn-primary"
-            style={{ width: '100%', marginTop: '16px' }}
+            style={{ width: '100%', marginTop: '16px', gap: '8px' }}
             onClick={() => setShowConfirm(true)}
           >
-            📤 Submit Quiz
+            <Send size={16} /> Submit Quiz
           </button>
         </div>
       </div>
@@ -230,8 +236,8 @@ export default function QuizTakingPage() {
       >
         <p>You have answered <strong>{answeredCount}</strong> of <strong>{questions.length}</strong> questions.</p>
         {answeredCount < questions.length && (
-          <p style={{ color: 'var(--color-warning)', fontSize: '14px', marginTop: '8px' }}>
-            ⚠ You have {questions.length - answeredCount} unanswered question(s).
+          <p style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--color-warning)', fontSize: '14px', marginTop: '8px' }}>
+            <AlertTriangle size={14} /> You have {questions.length - answeredCount} unanswered question(s).
           </p>
         )}
         <p style={{ marginTop: '12px', color: 'var(--color-text-secondary)', fontSize: '14px' }}>

@@ -4,6 +4,13 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { showToast } from '../store/toastSlice';
+import { 
+  HelpCircle, 
+  Edit2, 
+  Trash2, 
+  Check, 
+  Circle 
+} from 'lucide-react';
 
 export default function QuestionBankPage() {
   const [questions, setQuestions] = useState([]);
@@ -66,7 +73,9 @@ export default function QuestionBankPage() {
 
       {questions.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">❓</div>
+          <div className="empty-icon">
+            <HelpCircle size={36} />
+          </div>
           <h3>No questions found</h3>
           <p>Generate questions from a syllabus or adjust your filters</p>
         </div>
@@ -85,16 +94,20 @@ export default function QuestionBankPage() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '4px' }}>
-                  <button className="btn btn-ghost btn-sm" onClick={() => setEditing(q)}>✏️</button>
-                  <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(q.id)}>🗑</button>
+                  <button className="btn btn-ghost btn-sm" onClick={() => setEditing(q)}>
+                    <Edit2 size={14} />
+                  </button>
+                  <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(q.id)}>
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               </div>
               <p style={{ fontSize: '15px', lineHeight: 1.6 }}>{q.question_text}</p>
               {q.type === 'mcq' && q.options && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
                   {q.options.sort((a, b) => a.display_order - b.display_order).map((o) => (
-                    <span key={o.id} className="chip" style={o.is_correct ? { borderColor: 'var(--color-success)', color: 'var(--color-success)' } : {}}>
-                      {o.is_correct ? '✓' : '○'} {o.option_text}
+                    <span key={o.id} className="chip" style={o.is_correct ? { borderColor: 'var(--color-success)', color: 'var(--color-success)', gap: '6px' } : { gap: '6px' }}>
+                      {o.is_correct ? <Check size={12} /> : <Circle size={10} />} {o.option_text}
                     </span>
                   ))}
                 </div>

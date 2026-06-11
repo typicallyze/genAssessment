@@ -4,6 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { showToast } from '../store/toastSlice';
+import { 
+  Target, 
+  CheckCircle2, 
+  FileText, 
+  Lock, 
+  ArrowRight, 
+  Play, 
+  Eye, 
+  Clock, 
+  Link2 
+} from 'lucide-react';
 
 export default function DashboardPage() {
   const { user } = useSelector((s) => s.auth);
@@ -20,10 +31,10 @@ function InstructorDashboard() {
   }, []);
 
   const stats = [
-    { icon: '🎯', label: 'Total Sessions', value: data.sessions.length, color: 'var(--color-accent-primary)' },
-    { icon: '✅', label: 'Active', value: data.sessions.filter((s) => s.status === 'active').length, color: 'var(--color-success)' },
-    { icon: '📋', label: 'Drafts', value: data.sessions.filter((s) => s.status === 'draft').length, color: 'var(--color-warning)' },
-    { icon: '🔒', label: 'Closed', value: data.sessions.filter((s) => s.status === 'closed').length, color: 'var(--color-info)' },
+    { icon: Target, label: 'Total Sessions', value: data.sessions.length, color: 'var(--color-accent-primary)' },
+    { icon: CheckCircle2, label: 'Active', value: data.sessions.filter((s) => s.status === 'active').length, color: 'var(--color-success)' },
+    { icon: FileText, label: 'Drafts', value: data.sessions.filter((s) => s.status === 'draft').length, color: 'var(--color-warning)' },
+    { icon: Lock, label: 'Closed', value: data.sessions.filter((s) => s.status === 'closed').length, color: 'var(--color-info)' },
   ];
 
   if (data.loading) return <LoadingSkeleton type="spinner" />;
@@ -38,19 +49,26 @@ function InstructorDashboard() {
       </div>
 
       <div className="stats-grid">
-        {stats.map((s, i) => (
-          <div key={i} className="stat-card glass-card">
-            <div className="stat-icon" style={{ background: `${s.color}20`, color: s.color }}>{s.icon}</div>
-            <div className="stat-value" style={{ color: s.color }}>{s.value}</div>
-            <div className="stat-label">{s.label}</div>
-          </div>
-        ))}
+        {stats.map((s, i) => {
+          const StatIcon = s.icon;
+          return (
+            <div key={i} className="stat-card glass-card">
+              <div className="stat-icon" style={{ background: `${s.color}20`, color: s.color }}>
+                <StatIcon size={20} />
+              </div>
+              <div className="stat-value" style={{ color: s.color }}>{s.value}</div>
+              <div className="stat-label">{s.label}</div>
+            </div>
+          );
+        })}
       </div>
 
       <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>Recent Sessions</h2>
       {data.sessions.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">🎯</div>
+          <div className="empty-icon">
+            <Target size={36} />
+          </div>
           <h3>No sessions yet</h3>
           <p>Create your first quiz session to get started</p>
         </div>
@@ -129,7 +147,9 @@ function StudentDashboard() {
 
       {/* Join by code card */}
       <div className="glass-card" style={{ marginBottom: '32px', maxWidth: '500px' }}>
-        <h3 style={{ fontWeight: 700, marginBottom: '12px' }}>🔗 Join a Quiz</h3>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, marginBottom: '12px' }}>
+          <Link2 size={18} /> Join a Quiz
+        </h3>
         <form onSubmit={handleJoinByCode} style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
           <div className="input-group" style={{ flex: 1, marginBottom: 0 }}>
             <label>Session Code</label>
@@ -142,8 +162,8 @@ function StudentDashboard() {
               maxLength={6}
             />
           </div>
-          <button className="btn btn-primary" type="submit" disabled={joining || !code.trim()} style={{ height: '48px' }}>
-            {joining ? <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></span> : '🚀'} Join
+          <button className="btn btn-primary" type="submit" disabled={joining || !code.trim()} style={{ height: '48px', gap: '8px' }}>
+            {joining ? <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></span> : <ArrowRight size={16} />} Join
           </button>
         </form>
       </div>
@@ -176,7 +196,9 @@ function StudentDashboard() {
                           <span className="score-max">/ {a.total_possible || '?'}</span>
                         </div>
                       ) : (
-                        <span style={{ color: 'var(--color-warning)', fontSize: '13px' }}>🔒 Pending</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--color-warning)', fontSize: '13px' }}>
+                          <Lock size={12} /> Pending
+                        </span>
                       )}
                     </td>
                     <td><span className={`badge badge-${a.status}`}>{a.status}</span></td>
@@ -185,11 +207,17 @@ function StudentDashboard() {
                     </td>
                     <td>
                       {a.status === 'in_progress' ? (
-                        <button className="btn btn-primary btn-sm" onClick={() => navigate(`/quiz/${a.session_id}/take/${a.id}`)}>▶ Resume</button>
+                        <button className="btn btn-primary btn-sm" style={{ gap: '6px' }} onClick={() => navigate(`/quiz/${a.session_id}/take/${a.id}`)}>
+                          <Play size={12} /> Resume
+                        </button>
                       ) : a.results_released ? (
-                        <button className="btn btn-ghost btn-sm" onClick={() => navigate(`/results/${a.id}`)}>📊 View</button>
+                        <button className="btn btn-ghost btn-sm" style={{ gap: '6px' }} onClick={() => navigate(`/results/${a.id}`)}>
+                          <Eye size={12} /> View
+                        </button>
                       ) : (
-                        <span style={{ color: 'var(--color-text-muted)', fontSize: '13px' }}>⏳ Not released</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--color-text-muted)', fontSize: '13px' }}>
+                          <Clock size={12} /> Not released
+                        </span>
                       )}
                     </td>
                   </tr>
@@ -202,7 +230,9 @@ function StudentDashboard() {
 
       {attempts.length === 0 && (
         <div className="empty-state" style={{ marginTop: '24px' }}>
-          <div className="empty-icon">📝</div>
+          <div className="empty-icon">
+            <FileText size={36} />
+          </div>
           <h3>No quizzes taken yet</h3>
           <p>Enter a join code above to take your first quiz</p>
         </div>

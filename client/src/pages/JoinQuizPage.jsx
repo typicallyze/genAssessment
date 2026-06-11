@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { showToast } from '../store/toastSlice';
+import { Search, Clock, Play } from 'lucide-react';
 
 export default function JoinQuizPage() {
   const [code, setCode] = useState('');
@@ -58,8 +59,8 @@ export default function JoinQuizPage() {
             maxLength={6}
           />
         </div>
-        <button className="btn btn-primary btn-lg" style={{ width: '100%' }} disabled={loading || !code.trim()}>
-          {loading ? <span className="spinner"></span> : '🔍'} Look Up
+        <button className="btn btn-primary btn-lg" style={{ width: '100%', gap: '8px' }} disabled={loading || !code.trim()}>
+          {loading ? <span className="spinner"></span> : <Search size={18} />} Look Up
         </button>
       </form>
 
@@ -67,12 +68,14 @@ export default function JoinQuizPage() {
         <div className="glass-card slide-up">
           <h3 style={{ fontWeight: 700, marginBottom: '8px' }}>{session.title}</h3>
           {session.description && <p style={{ color: 'var(--color-text-secondary)', fontSize: '14px', marginBottom: '16px' }}>{session.description}</p>}
-          <div style={{ display: 'flex', gap: '16px', fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '20px' }}>
-            <span>⏱ {session.duration_minutes} min</span>
+          <div style={{ display: 'flex', gap: '16px', fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '20px', alignItems: 'center' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <Clock size={14} /> {session.duration_minutes} min
+            </span>
             <span className="badge badge-active">Active</span>
           </div>
-          <button className="btn btn-primary btn-lg" style={{ width: '100%' }} onClick={handleStart} disabled={starting}>
-            {starting ? <span className="spinner"></span> : '🚀'} Start Quiz
+          <button className="btn btn-primary btn-lg" style={{ width: '100%', gap: '8px' }} onClick={handleStart} disabled={starting}>
+            {starting ? <span className="spinner"></span> : <Play size={18} />} Start Quiz
           </button>
         </div>
       )}

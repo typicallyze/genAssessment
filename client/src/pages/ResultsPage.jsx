@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import { 
+  Clock, 
+  Check, 
+  X, 
+  Circle, 
+  Sparkles 
+} from 'lucide-react';
 
 export default function ResultsPage() {
   const { attemptId } = useParams();
@@ -23,7 +30,9 @@ export default function ResultsPage() {
   if (error) return (
     <div className="fade-in" style={{ maxWidth: '500px', margin: '60px auto', textAlign: 'center' }}>
       <div className="glass-card" style={{ padding: '48px 32px' }}>
-        <div style={{ fontSize: '4rem', marginBottom: '16px' }}>⏳</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+          <Clock size={64} style={{ color: 'var(--color-text-secondary)' }} />
+        </div>
         <h2 style={{ fontWeight: 700, marginBottom: '8px' }}>Results Not Available</h2>
         <p style={{ color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{error}</p>
         <p style={{ color: 'var(--color-text-muted)', fontSize: '14px', marginTop: '16px' }}>Your instructor will release the results when they're ready.</p>
@@ -44,7 +53,7 @@ export default function ResultsPage() {
 
       {/* Score Card */}
       <div className="glass-card" style={{ textAlign: 'center', marginBottom: '32px', padding: '32px' }}>
-        <div style={{ fontSize: '4rem', fontWeight: 800, background: 'var(--color-accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        <div style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--color-accent-primary)' }}>
           {percentage}%
         </div>
         <div className="score-display" style={{ justifyContent: 'center', marginTop: '8px' }}>
@@ -84,11 +93,12 @@ export default function ResultsPage() {
                     const isSelected = opt.id === a.selected_option_id;
                     const isCorrect = opt.is_correct;
                     let style = {};
-                    if (isCorrect) style = { borderColor: 'var(--color-success)', color: 'var(--color-success)', background: 'var(--color-success-bg)' };
-                    else if (isSelected && !isCorrect) style = { borderColor: 'var(--color-error)', color: 'var(--color-error)', background: 'var(--color-error-bg)' };
+                    if (isCorrect) style = { borderColor: 'var(--color-success)', color: 'var(--color-success)', background: 'var(--color-success-bg)', gap: '6px' };
+                    else if (isSelected && !isCorrect) style = { borderColor: 'var(--color-error)', color: 'var(--color-error)', background: 'var(--color-error-bg)', gap: '6px' };
+                    else style = { gap: '6px' };
                     return (
                       <span key={opt.id} className="chip" style={style}>
-                        {isSelected ? (isCorrect ? '✓' : '✕') : isCorrect ? '✓' : '○'} {opt.option_text}
+                        {isSelected ? (isCorrect ? <Check size={12} /> : <X size={12} />) : isCorrect ? <Check size={12} /> : <Circle size={10} />} {opt.option_text}
                       </span>
                     );
                   })}
@@ -106,7 +116,9 @@ export default function ResultsPage() {
                 {a.ai_gradings && a.ai_gradings.length > 0 && (
                   <div className="ai-grading-card">
                     <div className="ai-grading-header">
-                      <span className="ai-badge">🤖 AI Graded</span>
+                      <span className="ai-badge" style={{ gap: '6px' }}>
+                        <Sparkles size={12} /> AI Graded
+                      </span>
                       <div className="score-display">
                         <span style={{ fontWeight: 700 }}>{a.ai_gradings[0].ai_score}</span>
                         <span className="score-max">/ {a.marks_allotted}</span>

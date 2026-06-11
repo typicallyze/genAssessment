@@ -5,6 +5,19 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { showToast } from '../store/toastSlice';
+import { 
+  Plus, 
+  Target, 
+  Clock, 
+  HelpCircle, 
+  Users, 
+  Eye, 
+  EyeOff, 
+  Play, 
+  Lock, 
+  Sparkles, 
+  BarChart2 
+} from 'lucide-react';
 
 export default function SessionsPage() {
   const [sessions, setSessions] = useState([]);
@@ -70,15 +83,21 @@ export default function SessionsPage() {
           <h1>Quiz Sessions</h1>
           <p>Create, configure, and manage quiz sessions</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowCreate(true)}>➕ New Session</button>
+        <button className="btn btn-primary" style={{ gap: '8px' }} onClick={() => setShowCreate(true)}>
+          <Plus size={16} /> New Session
+        </button>
       </div>
 
       {sessions.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">🎯</div>
+          <div className="empty-icon">
+            <Target size={36} />
+          </div>
           <h3>No sessions created</h3>
           <p>Create your first quiz session to get started</p>
-          <button className="btn btn-primary" onClick={() => setShowCreate(true)}>Create Session</button>
+          <button className="btn btn-primary" style={{ gap: '8px' }} onClick={() => setShowCreate(true)}>
+            <Plus size={16} /> Create Session
+          </button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -92,14 +111,20 @@ export default function SessionsPage() {
                 <span className={`badge badge-${s.status}`}>{s.status}</span>
               </div>
 
-              <div style={{ display: 'flex', gap: '20px', fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '16px', flexWrap: 'wrap' }}>
-                <span>⏱ {s.duration_minutes} min</span>
-                <span>❓ {s.question_count || 0} questions</span>
-                <span>👥 {s.attempt_count || 0} attempts</span>
+              <div style={{ display: 'flex', gap: '20px', fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <Clock size={14} /> {s.duration_minutes} min
+                </span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <HelpCircle size={14} /> {s.question_count || 0} questions
+                </span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <Users size={14} /> {s.attempt_count || 0} attempts
+                </span>
                 {s.join_code && <span style={{ color: 'var(--color-accent-secondary)', fontWeight: 700 }}>Code: {s.join_code}</span>}
                 {s.status !== 'draft' && (
-                  <span style={{ color: s.results_released ? 'var(--color-success)' : 'var(--color-warning)', fontWeight: 600 }}>
-                    {s.results_released ? '🟢 Results visible' : '🔴 Results hidden'}
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: s.results_released ? 'var(--color-success)' : 'var(--color-warning)', fontWeight: 600 }}>
+                    {s.results_released ? <Eye size={14} /> : <EyeOff size={14} />} {s.results_released ? 'Results visible' : 'Results hidden'}
                   </span>
                 )}
               </div>
@@ -107,26 +132,40 @@ export default function SessionsPage() {
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {s.status === 'draft' && (
                   <>
-                    <button className="btn btn-secondary btn-sm" onClick={() => setShowAddQ(s.id)}>➕ Add Questions</button>
-                    <button className="btn btn-primary btn-sm" onClick={() => handleActivate(s.id)}>🚀 Activate</button>
+                    <button className="btn btn-secondary btn-sm" style={{ gap: '6px' }} onClick={() => setShowAddQ(s.id)}>
+                      <Plus size={14} /> Add Questions
+                    </button>
+                    <button className="btn btn-primary btn-sm" style={{ gap: '6px' }} onClick={() => handleActivate(s.id)}>
+                      <Play size={14} /> Activate
+                    </button>
                   </>
                 )}
                 {s.status === 'active' && (
                   <>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleClose(s.id)}>🔒 Close Session</button>
-                    <button className="btn btn-primary btn-sm" onClick={() => handleGrade(s.id)}>🤖 AI Grade</button>
-                    <button className="btn btn-secondary btn-sm" onClick={() => navigate(`/sessions/${s.id}/results`)}>📊 View Results</button>
-                    <button className="btn btn-ghost btn-sm" onClick={() => handleToggleResults(s.id)}>
-                      {s.results_released ? '🙈 Hide Results' : '👁 Release Results'}
+                    <button className="btn btn-danger btn-sm" style={{ gap: '6px' }} onClick={() => handleClose(s.id)}>
+                      <Lock size={14} /> Close Session
+                    </button>
+                    <button className="btn btn-primary btn-sm" style={{ gap: '6px' }} onClick={() => handleGrade(s.id)}>
+                      <Sparkles size={14} /> AI Grade
+                    </button>
+                    <button className="btn btn-secondary btn-sm" style={{ gap: '6px' }} onClick={() => navigate(`/sessions/${s.id}/results`)}>
+                      <BarChart2 size={14} /> View Results
+                    </button>
+                    <button className="btn btn-ghost btn-sm" style={{ gap: '6px' }} onClick={() => handleToggleResults(s.id)}>
+                      {s.results_released ? <><EyeOff size={14} /> Hide Results</> : <><Eye size={14} /> Release Results</>}
                     </button>
                   </>
                 )}
                 {s.status === 'closed' && (
                   <>
-                    <button className="btn btn-primary btn-sm" onClick={() => handleGrade(s.id)}>🤖 AI Grade</button>
-                    <button className="btn btn-secondary btn-sm" onClick={() => navigate(`/sessions/${s.id}/results`)}>📊 View Results</button>
-                    <button className="btn btn-ghost btn-sm" onClick={() => handleToggleResults(s.id)}>
-                      {s.results_released ? '🙈 Hide Results' : '👁 Release Results'}
+                    <button className="btn btn-primary btn-sm" style={{ gap: '6px' }} onClick={() => handleGrade(s.id)}>
+                      <Sparkles size={14} /> AI Grade
+                    </button>
+                    <button className="btn btn-secondary btn-sm" style={{ gap: '6px' }} onClick={() => navigate(`/sessions/${s.id}/results`)}>
+                      <BarChart2 size={14} /> View Results
+                    </button>
+                    <button className="btn btn-ghost btn-sm" style={{ gap: '6px' }} onClick={() => handleToggleResults(s.id)}>
+                      {s.results_released ? <><EyeOff size={14} /> Hide Results</> : <><Eye size={14} /> Release Results</>}
                     </button>
                   </>
                 )}

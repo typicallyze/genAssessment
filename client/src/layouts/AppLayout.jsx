@@ -2,6 +2,16 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { logout } from '../store/authSlice';
+import { 
+  LayoutDashboard, 
+  FileText, 
+  HelpCircle, 
+  Trophy, 
+  BookOpen, 
+  Link as LinkIcon, 
+  LogOut, 
+  Award 
+} from 'lucide-react';
 
 export default function AppLayout() {
   const { user } = useSelector((s) => s.auth);
@@ -13,15 +23,15 @@ export default function AppLayout() {
   };
 
   const instructorLinks = [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/syllabi', label: 'Syllabi', icon: '📄' },
-    { to: '/questions', label: 'Question Bank', icon: '❓' },
-    { to: '/sessions', label: 'Quiz Sessions', icon: '🎯' },
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/syllabi', label: 'Syllabi', icon: FileText },
+    { to: '/questions', label: 'Question Bank', icon: HelpCircle },
+    { to: '/sessions', label: 'Quiz Sessions', icon: Trophy },
   ];
 
   const studentLinks = [
-    { to: '/dashboard', label: 'My Quizzes', icon: '📝' },
-    { to: '/join', label: 'Join Quiz', icon: '🔗' },
+    { to: '/dashboard', label: 'My Quizzes', icon: BookOpen },
+    { to: '/join', label: 'Join Quiz', icon: LinkIcon },
   ];
 
   const links = user?.role === 'instructor' ? instructorLinks : studentLinks;
@@ -30,27 +40,34 @@ export default function AppLayout() {
     <div className="app-layout">
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">⚡</div>
+          <div className="sidebar-logo-icon">
+            <Award size={18} />
+          </div>
           <span className="sidebar-logo-text">GenAssess</span>
         </div>
 
         <nav className="sidebar-nav">
           <div className="sidebar-section-title">Main Menu</div>
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-            >
-              <span className="icon">{link.icon}</span>
-              <span>{link.label}</span>
-            </NavLink>
-          ))}
+          {links.map((link) => {
+            const IconComponent = link.icon;
+            return (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+              >
+                <span className="icon">
+                  <IconComponent size={18} />
+                </span>
+                <span>{link.label}</span>
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div className="sidebar-footer">
-          <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={handleLogout}>
-            <span>🚪</span> Sign Out
+          <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }} onClick={handleLogout}>
+            <LogOut size={16} /> Sign Out
           </button>
         </div>
       </aside>

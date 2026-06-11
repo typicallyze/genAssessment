@@ -5,6 +5,15 @@ import api from '../services/api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import Modal from '../components/Modal';
 import { showToast } from '../store/toastSlice';
+import { 
+  ArrowLeft, 
+  BarChart2, 
+  Eye, 
+  Edit2, 
+  Sparkles, 
+  Check, 
+  X 
+} from 'lucide-react';
 
 export default function SessionResultsPage() {
   const { sessionId } = useParams();
@@ -59,12 +68,16 @@ export default function SessionResultsPage() {
           <h1>Results: {data.session.title}</h1>
           <p>{data.attempts.length} student submissions</p>
         </div>
-        <button className="btn btn-secondary" onClick={() => navigate('/sessions')}>← Back to Sessions</button>
+        <button className="btn btn-secondary" style={{ gap: '8px' }} onClick={() => navigate('/sessions')}>
+          <ArrowLeft size={16} /> Back to Sessions
+        </button>
       </div>
 
       {data.attempts.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">📊</div>
+          <div className="empty-icon">
+            <BarChart2 size={36} />
+          </div>
           <h3>No attempts yet</h3>
           <p>No students have taken this quiz yet</p>
         </div>
@@ -98,8 +111,8 @@ export default function SessionResultsPage() {
                       {a.submitted_at ? new Date(a.submitted_at).toLocaleString() : '—'}
                     </td>
                     <td>
-                      <button className="btn btn-ghost btn-sm" onClick={() => handleViewAttempt(a.id)}>
-                        {expandedAttempt?.id === a.id ? 'Collapse' : '👁 Review'}
+                      <button className="btn btn-ghost btn-sm" style={{ gap: '6px' }} onClick={() => handleViewAttempt(a.id)}>
+                        {expandedAttempt?.id === a.id ? 'Collapse' : <><Eye size={14} /> Review</>}
                       </button>
                     </td>
                   </tr>
@@ -125,7 +138,9 @@ export default function SessionResultsPage() {
                         </div>
                         {a.is_manually_overridden && <span className="chip" style={{ color: 'var(--color-warning)' }}>Overridden</span>}
                         {a.type === 'subjective' && (
-                          <button className="btn btn-ghost btn-sm" onClick={() => setOverrideModal(a)}>✏️ Override</button>
+                          <button className="btn btn-ghost btn-sm" style={{ gap: '6px' }} onClick={() => setOverrideModal(a)}>
+                            <Edit2 size={12} /> Override
+                          </button>
                         )}
                       </div>
                     </div>
@@ -138,9 +153,14 @@ export default function SessionResultsPage() {
                           const isSelected = opt.id === a.selected_option_id;
                           const isCorrect = opt.is_correct;
                           let style = {};
-                          if (isCorrect) style = { borderColor: 'var(--color-success)', color: 'var(--color-success)' };
-                          else if (isSelected) style = { borderColor: 'var(--color-error)', color: 'var(--color-error)' };
-                          return <span key={opt.id} className="chip" style={style}>{isSelected ? (isCorrect ? '✓' : '✕') : ''} {opt.option_text}</span>;
+                          if (isCorrect) style = { borderColor: 'var(--color-success)', color: 'var(--color-success)', gap: '6px' };
+                          else if (isSelected) style = { borderColor: 'var(--color-error)', color: 'var(--color-error)', gap: '6px' };
+                          else style = { gap: '6px' };
+                          return (
+                            <span key={opt.id} className="chip" style={style}>
+                              {isSelected ? (isCorrect ? <Check size={12} /> : <X size={12} />) : ''} {opt.option_text}
+                            </span>
+                          );
                         })}
                       </div>
                     )}
@@ -153,7 +173,9 @@ export default function SessionResultsPage() {
                         {a.ai_gradings?.[0] && (
                           <div className="ai-grading-card">
                             <div className="ai-grading-header">
-                              <span className="ai-badge">🤖 AI Graded</span>
+                              <span className="ai-badge" style={{ gap: '6px' }}>
+                                <Sparkles size={12} /> AI Graded
+                              </span>
                               <span style={{ fontWeight: 700 }}>{a.ai_gradings[0].ai_score}/{a.marks_allotted}</span>
                             </div>
                             <div className="ai-justification">{a.ai_gradings[0].ai_justification}</div>

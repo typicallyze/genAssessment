@@ -4,6 +4,14 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { showToast } from '../store/toastSlice';
+import { 
+  Upload, 
+  FileText, 
+  Sparkles, 
+  Trash2, 
+  Paperclip, 
+  UploadCloud 
+} from 'lucide-react';
 
 export default function SyllabiPage() {
   const [syllabi, setSyllabi] = useState([]);
@@ -49,15 +57,21 @@ export default function SyllabiPage() {
           <h1>Syllabi</h1>
           <p>Upload course content and generate AI-powered questions</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowUpload(true)}>📤 Upload Syllabus</button>
+        <button className="btn btn-primary" style={{ gap: '8px' }} onClick={() => setShowUpload(true)}>
+          <Upload size={16} /> Upload Syllabus
+        </button>
       </div>
 
       {syllabi.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">📄</div>
+          <div className="empty-icon">
+            <FileText size={36} />
+          </div>
           <h3>No syllabi uploaded</h3>
           <p>Upload a DOCX or TXT file to start generating questions with AI</p>
-          <button className="btn btn-primary" onClick={() => setShowUpload(true)}>Upload Your First Syllabus</button>
+          <button className="btn btn-primary" style={{ gap: '8px' }} onClick={() => setShowUpload(true)}>
+            <Upload size={16} /> Upload Your First Syllabus
+          </button>
         </div>
       ) : (
         <div className="cards-grid">
@@ -65,7 +79,9 @@ export default function SyllabiPage() {
             <div key={s.id} className="glass-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                 <h3 style={{ fontWeight: 700, fontSize: '1.1rem' }}>{s.title}</h3>
-                <span className="chip">📄 {s.question_count || 0} Q</span>
+                <span className="chip" style={{ gap: '6px' }}>
+                  <FileText size={12} /> {s.question_count || 0} Q
+                </span>
               </div>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '13px', marginBottom: '16px' }}>
                 Uploaded {new Date(s.created_at).toLocaleDateString()}
@@ -78,12 +94,19 @@ export default function SyllabiPage() {
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
                   className="btn btn-primary btn-sm"
+                  style={{ gap: '6px' }}
                   disabled={generating === s.id}
                   onClick={() => handleGenerate(s.id)}
                 >
-                  {generating === s.id ? <><span className="spinner"></span> Generating...</> : '🤖 Generate Questions'}
+                  {generating === s.id ? (
+                    <><span className="spinner"></span> Generating...</>
+                  ) : (
+                    <><Sparkles size={14} /> Generate Questions</>
+                  )}
                 </button>
-                <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(s.id)}>🗑</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(s.id)}>
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
           ))}
@@ -136,8 +159,12 @@ function UploadModal({ isOpen, onClose, onSuccess }) {
       footer={
         <>
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleSubmit} disabled={!file || uploading}>
-            {uploading ? <><span className="spinner"></span> Uploading...</> : '📤 Upload'}
+          <button className="btn btn-primary" style={{ gap: '6px' }} onClick={handleSubmit} disabled={!file || uploading}>
+            {uploading ? (
+              <><span className="spinner"></span> Uploading...</>
+            ) : (
+              <><Upload size={16} /> Upload</>
+            )}
           </button>
         </>
       }
@@ -157,13 +184,17 @@ function UploadModal({ isOpen, onClose, onSuccess }) {
         <input ref={fileRef} type="file" hidden accept=".docx,.txt" onChange={(e) => setFile(e.target.files[0])} />
         {file ? (
           <>
-            <div className="drop-icon">📎</div>
+            <div className="drop-icon">
+              <Paperclip size={36} style={{ margin: '0 auto' }} />
+            </div>
             <div className="drop-text">{file.name}</div>
             <div className="drop-hint">{(file.size / 1024).toFixed(1)} KB — Click to change</div>
           </>
         ) : (
           <>
-            <div className="drop-icon">📁</div>
+            <div className="drop-icon">
+              <UploadCloud size={36} style={{ margin: '0 auto' }} />
+            </div>
             <div className="drop-text">Drop your file here or click to browse</div>
             <div className="drop-hint">Supports .docx and .txt files (max 10MB)</div>
           </>
