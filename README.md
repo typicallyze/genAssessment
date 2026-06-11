@@ -15,25 +15,18 @@ A full-stack quiz platform where instructors upload syllabi, generate AI-powered
 - PostgreSQL database (or a [Neon.tech](https://neon.tech) free-tier instance)
 - [Gemini API key](https://aistudio.google.com/apikey)
 
-## Setup
-
-### 1. Clone and install
+## Local Setup
 
 ```bash
 git clone https://github.com/your-username/genAssessment.git
 cd genAssessment
 
+# Install dependencies
 cd server && npm install
 cd ../client && npm install
 ```
 
-### 2. Configure environment
-
-```bash
-cp server/.env.example server/.env
-```
-
-Edit `server/.env`:
+Configure `server/.env` (copy from `.env.example`):
 
 ```env
 PORT=3001
@@ -43,28 +36,55 @@ GEMINI_API_KEY=your-gemini-api-key
 CLIENT_URL=http://localhost:5173
 ```
 
-### 3. Run database migrations
+Run migrations and start:
 
 ```bash
-cd server && npm run migrate
+cd server && npm run migrate    # one-time setup
+cd server && npm run dev        # terminal 1
+cd client && npm run dev        # terminal 2
 ```
 
-### 4. Start development servers
+Open [http://localhost:5173](http://localhost:5173).
 
-In two separate terminals:
+---
 
-```bash
-# Terminal 1 — Backend (port 3001)
-cd server && npm run dev
+## Deployment (Render + Vercel)
 
-# Terminal 2 — Frontend (port 5173)
-cd client && npm run dev
-```
+### Backend → Render (free)
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+1. Push your repo to GitHub
+2. Go to [render.com](https://render.com) → **New Web Service**
+3. Connect your GitHub repo, set:
+   - **Root Directory:** `server`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+4. Add environment variables:
+   | Variable | Value |
+   |---|---|
+   | `DATABASE_URL` | Your Neon.tech connection string |
+   | `JWT_SECRET` | Any random secret |
+   | `GEMINI_API_KEY` | Your Gemini API key |
+   | `CLIENT_URL` | `https://your-app.vercel.app` (set after Vercel deploy) |
+5. Deploy — note the URL (e.g. `https://genassess-api.onrender.com`)
+6. Run migrations once: in Render shell, run `npm run migrate`
+
+### Frontend → Vercel (free)
+
+1. Go to [vercel.com](https://vercel.com) → **New Project** → import your repo
+2. Configure:
+   - **Root Directory:** `client`
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+3. Add environment variable:
+   | Variable | Value |
+   |---|---|
+   | `VITE_API_URL` | `https://genassess-api.onrender.com/api` |
+4. Deploy
+5. Go back to Render and update `CLIENT_URL` to your Vercel URL
 
 ## Usage
 
 1. **Register** as an instructor or student
-2. **Instructor flow:** Upload syllabus → Generate questions → Create quiz session → Add questions → Activate → Share join code → Close → AI Grade → Release results
-3. **Student flow:** Enter join code → Take quiz → View results (when released)
+2. **Instructor:** Upload syllabus → Generate questions → Create session → Add questions → Activate → Share join code → Close → AI Grade → Release results
+3. **Student:** Enter join code → Take quiz → View results (when released)
